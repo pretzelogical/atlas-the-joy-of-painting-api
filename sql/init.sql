@@ -27,7 +27,12 @@ CREATE TABLE `episode` (
     FOREIGN KEY (`painting_id`) REFERENCES `painting` (`id`)
 );
 
+-- Create user and grant all
+CREATE USER 'jop_etl_user'@'%' IDENTIFIED BY 'bobross';
+GRANT ALL ON joy_of_painting.* TO 'jop_etl_user'@'%';
+FLUSH PRIVILEGES;
+
 -- Create user and grant select (read-only access)
-CREATE USER jop_user@localhost IDENTIFIED BY 'bobross';
-GRANT SELECT ON joy_of_painting.* TO 'jop_user'@'localhost';
+CREATE USER 'jop_user'@'%' IDENTIFIED BY 'bobross';
+GRANT SELECT ON joy_of_painting.* TO 'jop_user'@'%';
 FLUSH PRIVILEGES;
