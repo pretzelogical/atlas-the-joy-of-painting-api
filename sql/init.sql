@@ -6,25 +6,24 @@ USE `joy_of_painting`;
 
 -- Create tables
 CREATE TABLE `painting` (
-    `id` INT NOT NULL,
+    `index` INT NOT NULL,
     `name` VARCHAR(255) NOT NULL,
-    `painting_index` INT NOT NULL,
     `img_src` VARCHAR(255) NOT NULL,
-    `youtube_src` VARCHAR(255) NOT NULL,
     `colors` JSON NOT NULL,
     `colors_hex` JSON NOT NULL,
     `subject` JSON NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`index`)
 );
 
 CREATE TABLE `episode` (
-    `id` INT NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `season` INT NOT NULL,
     `episode` INT NOT NULL,
     `air_date` DATE NOT NULL,
-    `painting_id` INT NOT NULL,
+    `youtube_src` VARCHAR(255) NOT NULL,
+    `painting_index` INT NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`painting_id`) REFERENCES `painting` (`id`)
+    FOREIGN KEY (`painting_index`) REFERENCES `painting` (`index`)
 );
 
 -- Create user and grant all
