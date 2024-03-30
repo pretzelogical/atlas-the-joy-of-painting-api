@@ -2,11 +2,12 @@
 import json
 import csv
 from datetime import datetime
-from typing import List, Tuple, Union
+from typing import List, Tuple
 import mysql.connector
 """Extract transform and load tjop data
 
-Assumptions made: data in all files is ordered from first episode to last episode
+Assumptions made: data in all files is ordered from first episode to last
+episode
 """
 
 
@@ -172,7 +173,6 @@ def main():
 
     print(len(episodes), len(paintings))
 
-
     # load
     db_conn = mysql.connector.connect(
         host='localhost',
@@ -186,11 +186,3 @@ def main():
 
 
 main()
-# cursor = db_conn.cursor()
-# query = ("DESCRIBE painting")
-
-# cursor.execute(query)
-# print(cursor.fetchall())
-
-# cursor.close()
-# db_conn.close()
