@@ -37,7 +37,11 @@ def check_query(query) -> Union[None, str]:
                     return f"Invalid date {val} format must be YYYY-MM"
                 date_str_iso = f"{val}-01"
                 from_iso = datetime.fromisoformat(date_str_iso)
-                if not date_accepted['start'] <= from_iso <= date_accepted['end']:
+                if not (
+                    date_accepted['start']
+                    <= from_iso
+                    <= date_accepted['end']
+                                           ):
                     return f"Date {val} out of range"
                 query_filled = True
             case 'colors':
