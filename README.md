@@ -13,17 +13,20 @@ UML documentation is done with [draw.io](https://draw.io)
 
 SQL server runs as a docker container. To build and run use these commands inside the sql folder. The api server's user is set as read only since the data will not need to be modified afterwards.
 ```
+cd sql
 make build
 make run
 ```
 
 # ETL (./ETL)
 
-Extracts data from the given data files and uploads them to the SQL server. Also gets all the possible options for the colors and subject
+Extracts data from the given data files and generates a sql file to be used in the SQL server. Also gets all the possible options for the colors and subject
 
 ```
-# upload to sql server
+cd ETL
+# get init.sql
 ./main.py
+cp init.sql ../sql/init.sql
 # get options
 ./get_all_opts.py
 ```

@@ -3,7 +3,6 @@ import json
 import csv
 from datetime import datetime
 from typing import List, Tuple
-import mysql.connector
 """Extract transform and load tjop data
 
 Assumptions made: data in all files is ordered from first episode to last
@@ -135,29 +134,41 @@ def records_transform(titles_dates,
     return (episodes_arr, paintings_arr)
 
 
-def upload_to_mySQL(
-        db_conn,
-        episodes: List[dict],
-        paintings: List[dict]) -> None:
+def write_sql_init(episodes, paintings):
+
     insert_paintings = (
-        "INSERT INTO painting "
-        '(`index`, `name`, `img_src`, `colors`, `colors_hex`, `subject`) '
-        'VALUES (%(index)s, %(name)s, %(img_src)s, %(colors)s, %(colors_hex)s, %(subject)s)'  # noqa
+        "INSERT INTO painting\n"
+        '(`index`, `name`, `img_src`, `colors`, `colors_hex`, `subject`)\n'
+        'VALUES\n'
     )
+    for pnt in paintings:
+        insert_paintings += (
+            f"({pnt['index']}, '{pnt['name']}', '{pnt['img_src']}', "
+            f"'{pnt['colors']}', '{pnt['colors_hex']}', '{pnt['subject']}')\n"
+        )
+    insert_paintings += ';\n'
 
     insert_episodes = (
-        "INSERT INTO episode "
-        '(`season`, `episode`, `air_date`, `youtube_src`, `painting_index`) '
-        'VALUES (%(season)s, %(episode)s, %(air_date)s, %(youtube_src)s, %(painting_index)s)'  # noqa
+        "INSERT INTO episode\n"
+        '(`season`, `episode`, `air_date`, `youtube_src`, `painting_index`)\n'
+        'VALUES\n'
     )
+    for epo in episodes:
+        insert_episodes += (
+            f"({epo['season']}, {epo['episode']}, "
+            f"'{str(epo['air_date'])[:10]}', '{epo['youtube_src']}', "
+            f"{epo['painting_index']})\n"
+        )
+    insert_episodes += ';\n'
 
-    cursor = db_conn.cursor()
+    pre_init = ""
+    final_init = ""
+    with open('pre.init.sql', mode='r', encoding='utf-8') as pre_f:
+        pre_init = pre_f.read()
 
-    cursor.executemany(insert_paintings, paintings)
-    cursor.executemany(insert_episodes, episodes)
-
-    db_conn.commit()
-    cursor.close()
+    with open('init.sql', mode='w', encoding='utf-8') as f:
+        final_init = pre_init + insert_paintings + insert_episodes
+        f.write(final_init)
 
 
 def main():
@@ -171,18 +182,10 @@ def main():
         colors_used
     )
 
-    print(len(episodes), len(paintings))
-
     # load
-    db_conn = mysql.connector.connect(
-        host='localhost',
-        port=3306,
-        user='jop_etl_user',
-        password='bobross',
-        db='joy_of_painting'
-    )
-    upload_to_mySQL(db_conn, episodes, paintings)
-    db_conn.close()
+    write_sql_init(episodes, paintings)
+
+    print(len(episodes), len(paintings))
 
 
 main()
