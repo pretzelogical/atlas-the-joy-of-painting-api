@@ -75,10 +75,10 @@ def subject_to_json_list(colors_dict: dict) -> str:
         if val == '1':
             normal_key = (
                 ' '.join(
-                    map(
-                        lambda k: k[0].upper() + k[1:],
-                        key.lower().split('_')
-                    ),
+                        map(
+                            lambda k: k[0].upper() + k[1:],
+                            key.lower().split('_')
+                        ),
                 )
             )
             subjects.append(normal_key)

@@ -11,3 +11,29 @@ SQL server runs as a docker container. To build and run use these commands insid
 make build
 make run
 ```
+
+# ETL (./ETL)
+
+Extracts data from the given data files and uploads them to the SQL server. Also gets all the possible options for the colors and subject
+
+```
+# upload to sql server
+./main.py
+# get options
+./get_all_opts.py
+```
+
+# api (./api)
+
+Api with a single (/episodes) endpoint that queries the sql server for episodes that matches all/one or more of the episode air month, painting subject and painting color pallete.
+
+This is the shape of the json query. Values in [] are the accepted values which are contained in (./accepted.py)
+
+```
+{
+    "match": [match_accepted],
+    "month": "YYYY-MM-DD"  # in range month_accepted
+    "colors": [colors_accepted]
+    "subject": [subject_accepted]
+}
+```
