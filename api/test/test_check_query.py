@@ -5,11 +5,109 @@ from check_query import check_query
 
 class TestCheckQuery(unittest.TestCase):
 
-    # TODO: Add tests for dates, match only fail, invalid keys
+    def test_empty_object(self):
+        self.assertEqual(check_query({}), None)
+
+    def test_match(self):
+        self.assertEqual(
+            check_query({"match": "all", "colors": ["Black Gesso"]}),
+            None
+        )
+        self.assertEqual(
+            check_query({"match": "some", "subject": ["Apple Frame"]}),
+            None
+        )
+
+    def test_colors(self):
+        self.assertEqual(
+            check_query({
+                "match": "all",
+                "colors": ['Liquid Black', 'Liquid Clear',
+                           'Midnight Black', 'Phthalo Blue']
+                }),
+            None
+        )
+
+    def test_month(self):
+        self.assertEqual(
+            check_query({
+                "match": "all",
+                "month": "1983-01"
+                }),
+            None
+        )
+
+    def test_subject(self):
+        self.assertEqual(
+            check_query({
+                "match": "some",
+                "subject": ['Diane Andre', 'Dock',
+                            'Double Oval Frame', 'Farm']
+            }),
+            None
+        )
+
+    # Test failures
+
     def test_malformed_json(self):
         self.assertEqual(
             check_query(["match", "colors"]),
             "Malformed JSON"
+        )
+
+    def test_invalid_keys(self):
+        self.assertEqual(
+            check_query({
+                "match": "some",
+                "month": "1983-02",
+                "colors": ["Black Gesso"],
+                "subjet": ["Apple Frame"]
+            }),
+            "Invalid key subjet in ['match', 'month', 'colors', 'subjet']"
+        )
+        self.assertEqual(
+            check_query({
+                "match": "some",
+                "month": "1983-02",
+                "colors": ["Black Gesso"],
+                "subject": ["Apple Frame"],
+                "monkey": "wrench"
+            }),
+            ("Invalid key monkey in "
+             "['match', 'month', 'colors', 'subject', 'monkey']")
+        )
+
+    def test_invalid_month_format(self):
+        self.assertEqual(
+            check_query({
+                "match": "some",
+                "month": "1983-2-1"
+            }),
+            'Invalid date 1983-2-1 format must be YYYY-MM'
+        )
+
+    def test_month_out_of_range(self):
+        self.assertEqual(
+            check_query({
+                "match": "some",
+                "month": "1982-12"
+            }),
+            'Date 1982-12 out of range'
+        )
+        self.assertEqual(
+            check_query({
+                "match": "some",
+                "month": "1994-06"
+            }),
+            'Date 1994-06 out of range'
+        )
+
+    def test_match_only_fail(self):
+        self.assertEqual(
+            check_query({
+                "match": "all"
+            }),
+            "Query requires keys month, colors and subject"
         )
 
     def test_invalid_match(self):
@@ -29,7 +127,7 @@ class TestCheckQuery(unittest.TestCase):
                 "match": "all",
                 "colors": invalid_cols
             }),
-            f"Invalid color in {invalid_cols}"
+            f"Invalid color DROP ALL in {invalid_cols}"
         )
 
     def test_invalid_subject(self):
@@ -43,5 +141,5 @@ class TestCheckQuery(unittest.TestCase):
                 "match": "all",
                 "subject": invalid_subj
             }),
-            f"Invalid subject in {invalid_subj}"
+            f"Invalid subject Clouds? in {invalid_subj}"
         )
