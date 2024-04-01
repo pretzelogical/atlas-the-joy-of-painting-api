@@ -142,11 +142,12 @@ def write_sql_init(episodes, paintings):
         'VALUES\n'
     )
     for pnt in paintings:
+        pnt_name = pnt['name'].replace("'", "''")
         insert_paintings += (
-            f"({pnt['index']}, '{pnt['name']}', '{pnt['img_src']}', "
-            f"'{pnt['colors']}', '{pnt['colors_hex']}', '{pnt['subject']}')\n"
+            f"({pnt['index']}, '{pnt_name}', '{pnt['img_src']}', "
+            f"'{pnt['colors']}', '{pnt['colors_hex']}', '{pnt['subject']}'),\n"
         )
-    insert_paintings += ';\n'
+    insert_paintings = insert_paintings[:-2] + ";\n\n"
 
     insert_episodes = (
         "INSERT INTO episode\n"
@@ -157,9 +158,9 @@ def write_sql_init(episodes, paintings):
         insert_episodes += (
             f"({epo['season']}, {epo['episode']}, "
             f"'{str(epo['air_date'])[:10]}', '{epo['youtube_src']}', "
-            f"{epo['painting_index']})\n"
+            f"{epo['painting_index']}),\n"
         )
-    insert_episodes += ';\n'
+    insert_episodes = insert_episodes[:-2] + ";\n\n"
 
     pre_init = ""
     final_init = ""
