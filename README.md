@@ -2,6 +2,11 @@
 
 This project uses the concepts of ETL (extract, transform, load) to take different unorganized but related data sources and storing them in a SQL server.
 
+# Requirements
+    Docker
+    python 3.10^
+
+
 UML documentation is done with [draw.io](https://draw.io)
 
 # SQL server (./sql)
@@ -27,12 +32,12 @@ Extracts data from the given data files and uploads them to the SQL server. Also
 
 Api with a single (/episodes) endpoint that queries the sql server for episodes that matches all/one or more of the episode air month, painting subject and painting color pallete.
 
-This is the shape of the json query. Values in [] are the accepted values which are contained in (./accepted.py)
+This is the shape of the json query. Values in [] are the accepted values which are contained in (./check_query.py)
 
 ```
 {
     "match": [match_accepted],
-    "month": "YYYY-MM-DD"  # in range month_accepted
+    "month": "YYYY-MM-DD"  # in range date_accepted
     "colors": [colors_accepted]
     "subject": [subject_accepted]
 }

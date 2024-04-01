@@ -5,7 +5,11 @@ meta {
 }
 
 post {
-  url: 
-  body: none
+  url: http://localhost:5000/episodes
+  body: json
   auth: none
+}
+
+body:json {
+  { "match": "al", "colors": [ "Black Gesso", "Bright Red", "Burnt Umber" ] }
 }
