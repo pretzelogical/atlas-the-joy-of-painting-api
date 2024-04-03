@@ -63,17 +63,23 @@ class TJOPDatabase:
         if not query.get('month'):
             return date_str
 
-        date_str += (
-            f"( EXTRACT(YEAR FROM episode.air_date) = {query['month'][:4]} "
-            f"AND EXTRACT(MONTH FROM episode.air_date) = {query['month'][-2:]} ) "  # noqa
-        )
+        date_str += '( '
+        for date in query['month']:
+            date_str += (
+                f"( EXTRACT(YEAR FROM episode.air_date) = {date[:4]} "
+                f"AND EXTRACT(MONTH FROM episode.air_date) = {date[-2:]} ) OR "  # noqa
+            )
+
+        date_str = date_str[:-3]
+        date_str += ') '
         return date_str
 
     def build_query_str(self, query: dict) -> str:
         """ Build query from dict """
         query_str = (
             "SELECT episode.air_date, episode.episode, episode.season, "
-            "painting.name, painting.colors, painting.subject "
+            "episode.youtube_src, "
+            "painting.name, painting.img_src "
             "FROM episode "
             "JOIN painting ON episode.painting_index = painting.index "
             "WHERE "
