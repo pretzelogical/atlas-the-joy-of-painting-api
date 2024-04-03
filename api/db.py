@@ -2,6 +2,7 @@
 import mysql.connector
 import json
 
+
 class TJOPDatabase:
 
     def connect(self, host='localhost', port='5000') -> None:
@@ -17,9 +18,9 @@ class TJOPDatabase:
 
     def build_query_JSON_str(self, query: dict) -> str:
         """ Build part of query that select JSON values """
-        json_str = ""
         if not (query.get('colors') or query.get('subject')):
             return ''
+        json_str = ""
         if query["match"] == "all":
             # If strict match then use JSON_CONTAINS and AND conditionals
             json_str += '( '
@@ -47,7 +48,7 @@ class TJOPDatabase:
                 json_str += ') '
             else:
                 if query.get('colors'):
-                    json_str += 'AND '
+                    json_str += 'OR '
                 else:
                     json_str += '( '
                 json_str += (
@@ -58,7 +59,15 @@ class TJOPDatabase:
 
     def build_query_date_str(self, query: dict) -> str:
         """ Build year and month part of query """
-        return ''
+        if not query.get('month'):
+            return ''
+        date_str = ""
+
+        date_str += (
+            f"( EXTRACT(YEAR FROM episode.air_date) = {query['month'][:4]} "
+            f"AND EXTRACT(MONTH FROM episode.air_date) = {query['month'][-2:]} ) "
+        )
+        return date_str
 
     def build_query_str(self, query: dict) -> str:
         """ Build query from dict """
@@ -71,10 +80,10 @@ class TJOPDatabase:
         )
         json_str = self.build_query_JSON_str(query)
         query_str += json_str
-        # if json_str != '':
-        #     query_str += 'AND '
-        # date_str = self.build_query_date_str(query)
-        # query_str += date_str
+        if json_str != '':
+            query_str += 'AND '
+        date_str = self.build_query_date_str(query)
+        query_str += date_str
 
         # query_str += "( "
 

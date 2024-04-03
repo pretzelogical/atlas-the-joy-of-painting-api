@@ -12,7 +12,7 @@ class TestTJOPDatabase(unittest.TestCase):
             "match": "all",
             "month": "1983-02",
             "colors": ["Prussian Blue", "Sap Green", "Titanium White"],
-            "subject": ["Mountain", "Grass", "Trees"]
+            "subject": ["Mountain", "Trees"]
         })
 
         print(built_query, "\n")
@@ -30,9 +30,15 @@ class TestTJOPDatabase(unittest.TestCase):
     def test_build_query_match_all_month(self):
         built_query = self.db.build_query_str({
             "match": "all",
-            "month": "1983-02",
-            # "colors": ["Prussian Blue", "Sap Green", "Titanium White"],
-            # "subject": ["Mountain", "Grass", "Trees"]
+            "month": "1983-02"
+        })
+
+        print(built_query, "\n")
+
+    def test_build_query_match_some_month(self):
+        built_query = self.db.build_query_str({
+            "match": "some",
+            "month": "1990-07",
         })
 
         print(built_query, "\n")
