@@ -5,7 +5,7 @@ import json
 
 class TJOPDatabase:
 
-    def connect(self, host='localhost', port='5000') -> None:
+    def connect(self, host='localhost', port=5000) -> None:
         if self.__db:
             return
         self.__db = mysql.connector.connect(
@@ -18,9 +18,9 @@ class TJOPDatabase:
 
     def build_query_JSON_str(self, query: dict) -> str:
         """ Build part of query that select JSON values """
-        if not (query.get('colors') or query.get('subject')):
-            return ''
         json_str = ""
+        if not (query.get('colors') or query.get('subject')):
+            return json_str
         if query["match"] == "all":
             # If strict match then use JSON_CONTAINS and AND conditionals
             json_str += '( '
@@ -59,13 +59,13 @@ class TJOPDatabase:
 
     def build_query_date_str(self, query: dict) -> str:
         """ Build year and month part of query """
-        if not query.get('month'):
-            return ''
         date_str = ""
+        if not query.get('month'):
+            return date_str
 
         date_str += (
             f"( EXTRACT(YEAR FROM episode.air_date) = {query['month'][:4]} "
-            f"AND EXTRACT(MONTH FROM episode.air_date) = {query['month'][-2:]} ) "
+            f"AND EXTRACT(MONTH FROM episode.air_date) = {query['month'][-2:]} ) "  # noqa
         )
         return date_str
 
@@ -85,11 +85,5 @@ class TJOPDatabase:
         date_str = self.build_query_date_str(query)
         query_str += date_str
 
-        # query_str += "( "
-
-        # for col in query['colors']:
-        #     query_str += (
-        #         f"JSON_CONTAINS(painting.colors, )"
-        #    )
         query_str += ';'
         return query_str

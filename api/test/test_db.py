@@ -17,6 +17,31 @@ class TestTJOPDatabase(unittest.TestCase):
 
         print(built_query, "\n")
 
+    def test_build_query_match_all_colors(self):
+        built_query = self.db.build_query_str({
+            "match": "all",
+            "month": "1983-02",
+            "colors": ["Prussian Blue", "Sap Green", "Titanium White"],
+        })
+
+        print(built_query, "\n")
+
+    def test_build_query_match_all_subject(self):
+        built_query = self.db.build_query_str({
+            "match": "all",
+            "month": "1983-02",
+            "subject": ["Mountain", "Trees"]
+        })
+
+        print(built_query, "\n")
+
+    def test_build_query_match_all_month(self):
+        built_query = self.db.build_query_str({
+            "match": "all",
+            "month": "1983-02"
+        })
+        print(built_query, "\n")
+
     def test_build_query_match_some(self):
         built_query = self.db.build_query_str({
             "match": "some",
@@ -27,10 +52,20 @@ class TestTJOPDatabase(unittest.TestCase):
 
         print(built_query, "\n")
 
-    def test_build_query_match_all_month(self):
+    def test_build_query_match_some_colors(self):
         built_query = self.db.build_query_str({
-            "match": "all",
-            "month": "1983-02"
+            "match": "some",
+            "month": "1983-02",
+            "colors": ["Prussian Blue", "Sap Green", "Titanium White"]
+        })
+
+        print(built_query, "\n")
+
+    def test_build_query_match_some_subject(self):
+        built_query = self.db.build_query_str({
+            "match": "some",
+            "month": "1983-02",
+            "subject": ["Mountain", "Grass", "Trees"]
         })
 
         print(built_query, "\n")
