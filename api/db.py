@@ -6,7 +6,7 @@ import json
 class TJOPDatabase:
 
     def connect(self, host='localhost', port=5000) -> None:
-        if self.__db:
+        if hasattr(self, '__db'):
             return
         self.__db = mysql.connector.connect(
             host=host,
@@ -16,7 +16,7 @@ class TJOPDatabase:
             password='bobross'
         )
 
-    def build_query_JSON_str(self, query: dict) -> str:
+    def build_get_query_JSON_str(self, query: dict) -> str:
         """ Build part of query that select JSON values """
         json_str = ""
         if not (query.get('colors') or query.get('subject')):
@@ -57,7 +57,7 @@ class TJOPDatabase:
                 )
         return json_str
 
-    def build_query_date_str(self, query: dict) -> str:
+    def build_get_query_date_str(self, query: dict) -> str:
         """ Build year and month part of query """
         date_str = ""
         if not query.get('month'):
@@ -74,8 +74,10 @@ class TJOPDatabase:
         date_str += ') '
         return date_str
 
-    def build_query_str(self, query: dict) -> str:
+    def build_get_query_str(self, query: dict) -> str:
         """ Build query from dict """
+        # TODO: Add path for empty {} that fetches all
+        # TODO: Add option for user defined query
         query_str = (
             "SELECT episode.air_date, episode.episode, episode.season, "
             "episode.youtube_src, "
@@ -84,12 +86,27 @@ class TJOPDatabase:
             "JOIN painting ON episode.painting_index = painting.index "
             "WHERE "
         )
-        json_str = self.build_query_JSON_str(query)
+        json_str = self.build_get_query_JSON_str(query)
         query_str += json_str
-        if json_str != '':
+        if json_str != '' and query.get('month'):
             query_str += 'AND '
-        date_str = self.build_query_date_str(query)
+        date_str = self.build_get_query_date_str(query)
         query_str += date_str
 
         query_str += ';'
         return query_str
+
+    def get(self, query: dict):
+        if not self.__db:
+            return {}
+        query_str = self.build_get_query_str(query)
+        cursor = self.__db.cursor(dictionary=True)
+        print(query_str)
+        cursor.execute(query_str)
+        res = cursor.fetchall()
+        cursor.close()
+        return res
+
+    def close(self):
+        self.__db.close()
+        del self.__db
