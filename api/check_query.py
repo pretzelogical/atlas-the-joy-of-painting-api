@@ -33,17 +33,24 @@ def check_query(query) -> Union[None, str]:
                     return f"Invalid match value {val}"
             case 'month':
                 validate_date = r"^\d{4}-\d{2}$"
-                if not bool(re.match(validate_date, val)):
-                    return f"Invalid date {val} format must be YYYY-MM"
-                date_str_iso = f"{val}-01"
-                from_iso = datetime.fromisoformat(date_str_iso)
-                if not (
-                    date_accepted['start']
-                    <= from_iso
-                    <= date_accepted['end']
-                                           ):
-                    return f"Date {val} out of range"
-                query_filled = True
+                if type(val) is not list:
+                    return "Month must be an array"
+                for month in val:
+                    if not bool(re.match(validate_date, month)):
+                        return (
+                            f"Invalid date {month} "
+                            f"format must be YYYY-MM in {val}"
+                        )
+
+                    date_str_iso = f"{month}-01"
+                    from_iso = datetime.fromisoformat(date_str_iso)
+                    if not (
+                        date_accepted['start']
+                        <= from_iso
+                        <= date_accepted['end']
+                                               ):
+                        return f"Date {month} out of range in {val}"
+                    query_filled = True
             case 'colors':
                 if type(val) is not list:
                     return "Colors must be an array"

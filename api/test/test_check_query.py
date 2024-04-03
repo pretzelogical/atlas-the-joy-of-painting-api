@@ -32,7 +32,7 @@ class TestCheckQuery(unittest.TestCase):
         self.assertEqual(
             check_query({
                 "match": "all",
-                "month": "1983-01"
+                "month": ["1983-01"]
                 }),
             None
         )
@@ -59,7 +59,7 @@ class TestCheckQuery(unittest.TestCase):
         self.assertEqual(
             check_query({
                 "match": "some",
-                "month": "1983-02",
+                "month": ["1983-02"],
                 "colors": ["Black Gesso"],
                 "subjet": ["Apple Frame"]
             }),
@@ -68,7 +68,7 @@ class TestCheckQuery(unittest.TestCase):
         self.assertEqual(
             check_query({
                 "match": "some",
-                "month": "1983-02",
+                "month": ["1983-02"],
                 "colors": ["Black Gesso"],
                 "subject": ["Apple Frame"],
                 "monkey": "wrench"
@@ -81,25 +81,25 @@ class TestCheckQuery(unittest.TestCase):
         self.assertEqual(
             check_query({
                 "match": "some",
-                "month": "1983-2-1"
+                "month": ["1983-2-1"]
             }),
-            'Invalid date 1983-2-1 format must be YYYY-MM'
+            'Invalid date 1983-2-1 format must be YYYY-MM in [\'1983-2-1\']'
         )
 
     def test_month_out_of_range(self):
         self.assertEqual(
             check_query({
                 "match": "some",
-                "month": "1982-12"
+                "month": ["1982-12"]
             }),
-            'Date 1982-12 out of range'
+            'Date 1982-12 out of range in [\'1982-12\']'
         )
         self.assertEqual(
             check_query({
                 "match": "some",
-                "month": "1994-06"
+                "month": ["1994-06"]
             }),
-            'Date 1994-06 out of range'
+            'Date 1994-06 out of range in [\'1994-06\']'
         )
 
     def test_match_only_fail(self):
