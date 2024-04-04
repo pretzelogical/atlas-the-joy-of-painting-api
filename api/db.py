@@ -76,7 +76,6 @@ class TJOPDatabase:
 
     def build_get_query_str(self, query: dict) -> str:
         """ Build query from dict """
-        # TODO: Add option for user defined query
         if query == {}:
             return (
                 "SELECT episode.air_date, episode.episode, episode.season, "
@@ -108,7 +107,6 @@ class TJOPDatabase:
             return {}
         query_str = self.build_get_query_str(query)
         cursor = self.__db.cursor(dictionary=True)
-        print(query_str)
         cursor.execute(query_str)
         res = cursor.fetchall()
         cursor.close()
