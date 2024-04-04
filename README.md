@@ -5,6 +5,7 @@ This project uses the concepts of ETL (extract, transform, load) to take differe
 # Requirements
     Docker
     python 3.10^
+    python-mysql-connector 8.3.0^
 
 
 UML documentation is done with [draw.io](https://draw.io)
@@ -44,4 +45,12 @@ This is the shape of the json query. Values in [] are the accepted values which 
     "colors": [colors_accepted]
     "subject": [subject_accepted]
 }
+```
+
+
+To run
+
+```
+cd ./api
+python3 app.py
 ```
