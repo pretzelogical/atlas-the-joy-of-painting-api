@@ -74,32 +74,58 @@ class TJOPDatabase:
         date_str += ') '
         return date_str
 
+    def build_get_query_fields_str(self, query: dict) -> str:
+        if not query.get('fields'):
+            return (
+                "SELECT * "
+                "FROM episode "
+                "JOIN painting ON episode.painting_index = painting.index "
+                "WHERE "
+            )
+        painting_fields = ['index', 'name', 'img_src', 'colors',
+                           'colors_hex', 'subject']
+        episode_fields = ['season', 'episode', 'air_date',
+                          'youtube_src', 'painting_index']
+        fields_str = "SELECT "
+
+        for f in query['fields']:
+            if f in painting_fields:
+                fields_str += f"painting.{f}, "
+            elif f in episode_fields:
+                fields_str += f"episode.{f}, "
+        return (
+            fields_str[:-2] +
+            ' FROM episode '
+            'JOIN painting ON episode.painting_index = painting.index '
+            'WHERE '
+        )
+
     def build_get_query_str(self, query: dict) -> str:
         """ Build query from dict """
         if query == {}:
             return (
-                "SELECT episode.air_date, episode.episode, episode.season, "
-                "episode.youtube_src, "
-                "painting.name, painting.img_src "
+                "SELECT * "
                 "FROM episode "
                 "JOIN painting ON episode.painting_index = painting.index ;"
             )
-        query_str = (
-            "SELECT episode.air_date, episode.episode, episode.season, "
-            "episode.youtube_src, "
-            "painting.name, painting.img_src "
-            "FROM episode "
-            "JOIN painting ON episode.painting_index = painting.index "
-            "WHERE "
-        )
+        query_str = ""
+
+        fields_str = self.build_get_query_fields_str(query)
+        query_str += fields_str
+
         json_str = self.build_get_query_JSON_str(query)
         query_str += json_str
+
         if json_str != '' and query.get('month'):
             query_str += 'AND '
         date_str = self.build_get_query_date_str(query)
         query_str += date_str
 
-        query_str += ';'
+        if json_str == '' and date_str == '':
+            query_str = query_str[:-6] + ';'
+        else:
+            query_str += ';'
+
         return query_str
 
     def get(self, query: dict):

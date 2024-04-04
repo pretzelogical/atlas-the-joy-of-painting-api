@@ -84,3 +84,19 @@ class TestTJOPDatabase(unittest.TestCase):
         })
 
         print(built_query, "\n")
+
+    def test_build_query_match_fields(self):
+        built_query = self.db.build_get_query_str({
+            "match": "some",
+            "month": ["1990-07", "1983-02"],
+            "fields": ["episode", "air_date", "name", "img_src", "colors"]
+        })
+
+        print(built_query, "\n")
+
+    def test_build_query_fields_only(self):
+        built_query = self.db.build_get_query_str({
+            "fields": ["episode", "air_date", "name", "img_src", "colors"]
+        })
+
+        print(built_query, "\n")

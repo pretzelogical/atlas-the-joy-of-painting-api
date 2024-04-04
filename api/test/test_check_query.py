@@ -57,6 +57,13 @@ class TestCheckQuery(unittest.TestCase):
             None
         )
 
+        self.assertEqual(
+            check_query({
+                "fields": ["name", "youtube_src"]
+            }),
+            None
+        )
+
     # Test failures
 
     def test_malformed_json(self):

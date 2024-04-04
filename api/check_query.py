@@ -78,6 +78,7 @@ def check_query(query) -> Union[None, str]:
                 for field in val:
                     if field not in get_fields_accepted:
                         return f"Invalid field {field} in {val}"
+                query_filled = True
             case _:
                 return f"Invalid key {key} in {list(query.keys())}"
     if not query_filled:
