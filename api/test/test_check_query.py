@@ -47,6 +47,16 @@ class TestCheckQuery(unittest.TestCase):
             None
         )
 
+    def test_fields(self):
+        self.assertEqual(
+            check_query({
+                "match": "all",
+                "fields": ["name", "youtube_src"],
+                "subject": ["Dock"]
+            }),
+            None
+        )
+
     # Test failures
 
     def test_malformed_json(self):
@@ -103,11 +113,11 @@ class TestCheckQuery(unittest.TestCase):
         )
 
     def test_match_only_fail(self):
+        query = {"match": "all"}
         self.assertEqual(
-            check_query({
-                "match": "all"
-            }),
-            "Query requires keys month, colors and subject"
+            check_query(query),
+            (f"Query {query} requires month, colors and subject to be a non "
+                "empty array")
         )
 
     def test_invalid_match(self):
@@ -142,4 +152,15 @@ class TestCheckQuery(unittest.TestCase):
                 "subject": invalid_subj
             }),
             f"Invalid subject Clouds? in {invalid_subj}"
+        )
+
+    def test_empty_fields(self):
+        query = {
+                "match": "all",
+                "colors": [],
+                "subject": []
+        }
+        self.assertEqual(
+            check_query(query),
+            None
         )
