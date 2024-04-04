@@ -76,8 +76,15 @@ class TJOPDatabase:
 
     def build_get_query_str(self, query: dict) -> str:
         """ Build query from dict """
-        # TODO: Add path for empty {} that fetches all
         # TODO: Add option for user defined query
+        if query == {}:
+            return (
+                "SELECT episode.air_date, episode.episode, episode.season, "
+                "episode.youtube_src, "
+                "painting.name, painting.img_src "
+                "FROM episode "
+                "JOIN painting ON episode.painting_index = painting.index ;"
+            )
         query_str = (
             "SELECT episode.air_date, episode.episode, episode.season, "
             "episode.youtube_src, "
