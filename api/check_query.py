@@ -10,7 +10,7 @@ match_accepted = ['all', 'some']
 date_accepted = {"start": datetime(1983, 1, 1), "end": datetime(1994, 5, 31)}
 colors_accepted = ['Black Gesso', 'Bright Red', 'Burnt Umber', 'Cadmium Yellow', 'Dark Sienna', 'Indian Red', 'Indian Yellow', 'Liquid Black', 'Liquid Clear', 'Midnight Black', 'Phthalo Blue', 'Phthalo Green', 'Prussian Blue', 'Sap Green', 'Titanium White', 'Van Dyke Brown', 'Yellow Ochre', 'Alizarin Crimson']  # noqa
 subject_accepted = ['Apple Frame', 'Aurora Borealis', 'Barn', 'Beach', 'Boat', 'Bridge', 'Building', 'Bushes', 'Cabin', 'Cactus', 'Circle Frame', 'Cirrus', 'Cliff', 'Clouds', 'Conifer', 'Cumulus', 'Deciduous', 'Diane Andre', 'Dock', 'Double Oval Frame', 'Farm', 'Fence', 'Fire', 'Florida Frame', 'Flowers', 'Fog', 'Framed', 'Grass', 'Guest', 'Half Circle Frame', 'Half Oval Frame', 'Hills', 'Lake', 'Lakes', 'Lighthouse', 'Mill', 'Moon', 'Mountain', 'Mountains', 'Night', 'Ocean', 'Oval Frame', 'Palm Trees', 'Path', 'Person', 'Portrait', 'Rectangle 3d Frame', 'Rectangular Frame', 'River', 'Rocks', 'Seashell Frame', 'Snow', 'Snowy Mountain', 'Split Frame', 'Steve Ross', 'Structure', 'Sun', 'Tomb Frame', 'Tree', 'Trees', 'Triple Frame', 'Waterfall', 'Waves', 'Windmill', 'Window Frame', 'Winter', 'Wood Framed']  # noqa
-get_fields_accepted = ['index', 'name', 'img_src', 'colors', 'colors_hex', 'subject', 'season', 'episode', 'air_date', 'youtube_src', 'painting_index']  # noqa
+fields_accepted = ['index', 'name', 'img_src', 'colors', 'colors_hex', 'subject', 'season', 'episode', 'air_date', 'youtube_src', 'painting_index']  # noqa
 
 
 def check_query(query) -> Union[None, str]:
@@ -76,7 +76,7 @@ def check_query(query) -> Union[None, str]:
                 if type(val) is not list:
                     return "Fields must be an array"
                 for field in val:
-                    if field not in get_fields_accepted:
+                    if field not in fields_accepted:
                         return f"Invalid field {field} in {val}"
                 query_filled = True
             case _:
