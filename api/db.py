@@ -6,6 +6,7 @@ import json
 class TJOPDatabase:
 
     def connect(self, host='localhost', port=5000) -> None:
+        """ Connect to the database """
         if hasattr(self, '__db'):
             return
         self.__db = mysql.connector.connect(
@@ -75,6 +76,7 @@ class TJOPDatabase:
         return date_str
 
     def build_get_query_fields_str(self, query: dict) -> str:
+        """ Build the select section of the query """
         if not query.get('fields'):
             return (
                 "SELECT * "
@@ -129,6 +131,7 @@ class TJOPDatabase:
         return query_str
 
     def get(self, query: dict):
+        """ Get the query from the database """
         if not self.__db:
             return {}
         query_str = self.build_get_query_str(query)
@@ -139,5 +142,6 @@ class TJOPDatabase:
         return res
 
     def close(self):
+        """ Close the database """
         self.__db.close()
         del self.__db

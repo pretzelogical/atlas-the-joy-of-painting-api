@@ -19,6 +19,7 @@ app.url_map.strict_slashes = False
 
 @app.route("/episodes", methods=["POST"])
 def episode_query():
+    """ Execute episode query """
     query = request.get_json()
     query_error = check_query(query)
     if query_error:

@@ -135,7 +135,7 @@ def records_transform(titles_dates,
 
 
 def write_sql_init(episodes, paintings):
-
+    """ Writes out the full sql init """
     insert_paintings = (
         "INSERT INTO painting\n"
         '(`index`, `name`, `img_src`, `colors`, `colors_hex`, `subject`)\n'
@@ -173,6 +173,7 @@ def write_sql_init(episodes, paintings):
 
 
 def main():
+    """ Extract, transform and load the data """
     # extract
     titles_dates = titles_dates_extract()
     colors_used, subject_matter = csv_extract()
